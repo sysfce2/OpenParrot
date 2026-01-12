@@ -229,7 +229,7 @@ static std::string ParseFileNamesA(LPCSTR lpFileName)
 			std::string movBufOP = moveBufA;
 			std::replace(movBufOP.begin(), movBufOP.end(), '/', '\\');
 
-			// if redirected path contains the full path, don't redirect, fixes running games from D:
+			// if redirected path contains the full path, don't redirect, fixes running games from E:
 			if (movBufOP.find(pathRoot + 3) != std::string::npos)
 			{
 #ifdef _DEBUG
@@ -237,6 +237,19 @@ static std::string ParseFileNamesA(LPCSTR lpFileName)
 #endif
 				return lpFileName;
 			}
+		}
+		else
+		{
+			if (!strncmp(lpFileName, "E:data", 6)) // needed for ChaseHQ2 when run from E:
+			{
+				sprintf(moveBufA, ".\\%s", lpFileName + 2);
+#ifdef _DEBUG
+				info("E:data redirect: %s", moveBufA);
+#endif
+				return moveBufA;
+			}
+
+			sprintf(moveBufA, ".\\%s", lpFileName + 2);
 		}
 		return moveBufA;
 	}
